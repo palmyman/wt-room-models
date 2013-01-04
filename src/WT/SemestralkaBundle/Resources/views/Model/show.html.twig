@@ -28,6 +28,14 @@
 </table>
 <h2>And it's schema</h2>
 <table class="model">
+    <thead>
+        <tr>
+            <th></th>
+            {% for col in refactoredSeats.1 %}
+                <th>{{ col.col }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
     <tbody>        
         {% for row in refactoredSeats %}
         <tr>
