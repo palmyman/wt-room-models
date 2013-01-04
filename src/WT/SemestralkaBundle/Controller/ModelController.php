@@ -83,10 +83,13 @@ class ModelController extends Controller
             $refactoredSeats = $refactoredSeatsArray['refactoredseats'];
             $avgPrice = $refactoredSeatsArray['avgprice'];
 
+        $refactoredSeatsSteps = NULL;
+
         if(isset($_POST['form'])) {
             if($_POST['form']['sizeofgroup'] > $modelCapacity)
                 return array(
                 'refactoredSeats'      => $refactoredSeats,
+                'refactoredSeatsSteps' => $refactoredSeatsSteps,
                 'model'                => $model,
                 'form'                 => $form->createView(),
                 'error'                => 'Model does not have enough empty seats!',
@@ -100,6 +103,8 @@ class ModelController extends Controller
                 $refactoredSeatsArray = $this->countPrices($refactoredSeats);
                     $refactoredSeats = $refactoredSeatsArray['refactoredseats'];
                     $avgPrice = $refactoredSeatsArray['avgprice'];
+
+                //$refactoredSeatsSteps[] = $refactoredSeats;
             }                        
         }            
         
@@ -111,6 +116,7 @@ class ModelController extends Controller
 
         return array(
             'refactoredSeats'      => $refactoredSeats,
+            'refactoredSeatsSteps' => $refactoredSeatsSteps,
             'model'                => $model,
             'form'                 => $form->createView(),
             'error'                => 0,
