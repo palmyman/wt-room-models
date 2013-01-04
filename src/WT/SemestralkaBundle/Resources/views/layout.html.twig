@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+<head>  
+  <meta name="description" content="semestralni prace" />
+  <meta name="keywords" content="cvut fit Cuhel Lubomir semestralni prace wt1" />
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <link title="black" rel="stylesheet" type="text/css" href="{{ asset('bundles/wtsemestralka/style/style.css') }}" media="screen" />
+  <link rel="stylesheet" type="text/css" href="style/styleprint.css" media="print" />
+  <title>{% block title %}Stručný popis{% endblock title %} {% block additionalTitle %}| Semestrální práce WT1{% endblock additionalTitle %}</title>
+</head>
+
+<body>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <div>Semestrální práce WT1</div>
+          <h2>Zasedací pořádek</h2>
+        </div>        
+      </div>
+
+      <div id="menubar">
+        <ul id="menu">
+          {% block menu %}
+          <li><a href="{{ path('home') }}">Project Description</a></li>
+          <li><a href="{{ path('room') }}">Rooms</a></li>
+          <li><a href="{{ path('model') }}">Models</a></li>
+          {% endblock menu %}
+        </ul>
+      </div>
+    </div>
+    <div id="content_header"></div>
+    <div id="site_content">      
+      <div id="content">
+        {% block content %}
+        <h1>Stručný popis</h1>
+        <p>Cílem práce je vytvořit aplikaci, která umožní vytvořit rozsazení studentů v učebně na základě modelu místnosti. Aplikace bude podporovat dvě uživatelské role - nepřihlášený a přihlášený uživatel. Rozdíl ve funkcionalitě bude jen ten, že přihlášený uživatel si může veškeré nahrané modely a vypočítaná rozsazení uložit a opět načíst. </p>
+        {% endblock content %}        	
+      </div>
+    </div>
+    <div id="content_footer"></div>
+  </div>
+</body>
+</html>

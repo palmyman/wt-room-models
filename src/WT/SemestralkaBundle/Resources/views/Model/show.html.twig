@@ -1,0 +1,69 @@
+{% extends 'WTSemestralkaBundle::layout.html.twig' %}
+{% block content %}
+<h1>{% block title %}Model{% endblock title %}</h1>
+
+<table class="record_properties">
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ entity.id }}</td>
+        </tr>
+        <tr>
+            <th>Author</th>
+            <td>{{ entity.author }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ entity.description }}</td>
+        </tr>
+        <tr>
+            <th>Capacity</th>
+            <td>{{ entity.capacity }}</td>
+        </tr>
+        <tr>
+            <th>Room</th>
+            <td>{{ entity.room.name }}</td>
+        </tr>
+    </tbody>
+</table>
+<h2>And it's schema</h2>
+<table class="model">
+    <tbody>        
+        {% for row in refactoredSeats %}
+        <tr>
+            <th>{{ row.1.row }}</th>            
+            {% for col in row %}
+                <td class="{{ col.class }}"></td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('room_show', { 'id': entity.room.id }) }}">
+            Back to the parent room's models
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('model_fill', { 'id': entity.id }) }}">
+            Fill model
+        </a>
+    </li>    
+    {# disabled
+    <li>
+        <a href="{{ path('model_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    #}
+    <li>
+        <form action="{{ path('model_delete', { 'id': entity.id }) }}" method="post">
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+
+{% endblock content %}

@@ -1,0 +1,84 @@
+{% extends 'WTSemestralkaBundle::layout.html.twig' %}
+{% block content %}
+<h1>{% block title %}Room{% endblock title %}</h1>
+
+<table class="record_properties">
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ entity.id }}</td>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td>{{ entity.name }}</td>
+        </tr>
+        <tr>
+            <th>Rows</th>
+            <td>{{ entity.rows }}</td>
+        </tr>
+        <tr>
+            <th>Cols</th>
+            <td>{{ entity.cols }}</td>
+        </tr>
+        <tr>
+            <th>Capacity</th>
+            <td>{{ entity.capacity }}</td>
+        </tr>
+    </tbody>
+</table>
+
+{% if models %}
+<h2>And it's models</h2>
+<table class="records_list">
+    <thead>
+        <tr>
+            <th>Author</th>
+            <th>Description</th>
+            <th>Capacity</th>
+            <th>Room</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for model in models %}
+        <tr>
+            <td>{{ model.author }}</td>
+            <td>{{ model.description }}</td>
+            <td>{{ model.capacity }}</td>
+            <td>{{ model.room.name }}</td>
+            <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('model_show', { 'id': model.id }) }}">show</a>
+                    </li>                    
+                </ul>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('room') }}">
+            Back to the list
+        </a>
+    </li>
+    {% if models %}
+    
+    {% else %}
+    <li>
+        <a href="{{ path('room_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>
+        <form action="{{ path('room_delete', { 'id': entity.id }) }}" method="post">
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+    {% endif %}
+</ul>
+{% endblock content %}

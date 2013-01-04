@@ -1,0 +1,81 @@
+{% extends 'WTSemestralkaBundle::layout.html.twig' %}
+{% block content %}
+<h1>{% block title %}Filling model{% endblock title %}</h1>
+
+<table class="record_properties">
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ model.id }}</td>
+        </tr>
+        <tr>
+            <th>Author</th>
+            <td>{{ model.author }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ model.description }}</td>
+        </tr>
+        <tr>
+            <th>Available seats</th>
+            <td>{{ model.capacity }}</td>
+        </tr>
+        <tr>
+            <th>Room</th>
+            <td>{{ model.room.name }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="model">
+    <tbody>        
+        {% for row in refactoredSeats %}
+        <tr>
+            <th>{{ row.1.row }}</th>            
+            {% for col in row %}
+                <td class="{{ col.class }}">
+                    {% if col.order %}
+                        {{ col.order }}
+                    {% else %}
+                        {{ col.price }}
+                    {% endif %}
+                </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<form action="#" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+    <p>
+        <button type="submit">Fill</button>
+    </p>
+</form>
+{% if error %}
+    <div>{{error}}</div>
+{% endif %}
+
+{#
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('room_show', { 'id': entity.room.id }) }}">
+            Back to the parent room's models
+        </a>
+    </li>    
+    
+    <li>
+        <a href="{{ path('model_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    
+    <li>
+        <form action="{{ path('model_delete', { 'id': entity.id }) }}" method="post">
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+#}
+{% endblock content %}
