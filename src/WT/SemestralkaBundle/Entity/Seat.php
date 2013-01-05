@@ -50,9 +50,9 @@ class Seat
     protected $available;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="initial", type="boolean")
+     * @ORM\Column(name="initial", type="integer")
      */
     protected $initial;
 

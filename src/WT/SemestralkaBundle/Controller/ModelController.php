@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use WT\SemestralkaBundle\Entity\Model;
 use WT\SemestralkaBundle\Form\ModelType;
 use WT\SemestralkaBundle\Entity\Seat;
-use Symfony\Component\HttpFoundation\Session\Session;
+//use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Model controller.
@@ -47,11 +47,10 @@ class ModelController extends Controller
     public function fillAction($id) {
         /*$session = new Session();        
         var_dump($_POST);*/
-
-        $modelForm = new Model();
-        
-        $form = $this->createFormBuilder($modelForm)
+           
+        $form = $this->createFormBuilder()
             ->add('sizeofgroup')
+            ->add('n')
             ->getForm();        
 
         $em = $this->getDoctrine()->getManager();
@@ -95,9 +94,9 @@ class ModelController extends Controller
                 'error'                => 'Model does not have enough empty seats!',
             );
             for ($i=1; $i <= $_POST['form']['sizeofgroup']; $i++) {                       
-                $target = $this->pickSeat($refactoredSeats, $avgPrice);
+                $target = $this->pickSeat($refactoredSeats, $avgPrice, $i);
 
-                $refactoredSeats = $this->sitDown($refactoredSeats, $target, $i);
+                $refactoredSeats = $this->sitDown($refactoredSeats, $target, $i, $_POST['form']['n']);
                 $modelCapacity = $model->decCapacity();
 
                 $refactoredSeatsArray = $this->countPrices($refactoredSeats);
@@ -124,20 +123,37 @@ class ModelController extends Controller
     }
 
     /*vybere sedadlo kam si sednout a vrati jeho pozici*/
-    public function pickSeat($refactoredSeats, $avgPrice) {
+    public function pickSeat($refactoredSeats, $avgPrice, $order = 0) {
         $countInitialSeats = 0;
+        $countIdealInitialSeats = 0;
         foreach ($refactoredSeats as $rowIn) {
             foreach ($rowIn as $seatIn) {
-                if($seatIn->getInitial() && $seatIn->getPrice() >= $avgPrice) {
-                    $initialSeats[] = $seatIn;
-                    $countInitialSeats++;
-                }
-            }
-        }
-        $targetIndex = rand(0, $countInitialSeats - 1);
+                if($seatIn->getInitial()) {
+                    if($seatIn->getPrice() >= $avgPrice) {
+                        $initialSeats[] = $seatIn;
+                        $countInitialSeats++;
+                    }
 
-        $row = $initialSeats[$targetIndex]->getRow();
-        $col = $initialSeats[$targetIndex]->getCol();
+                    if($seatIn->getInitial() <= $order || $seatIn->getInitial() === '1') {
+                        $idealInitialSeats[] = $seatIn;
+                        $countIdealInitialSeats++;
+                    }
+                }                
+            }
+        }      
+
+        if($countIdealInitialSeats) {
+            //echo "nalezam $countIdealInitialSeats / $countInitialSeats idealnich sedadel v kroku $order<br />";
+            $targetIndex = rand(0, $countIdealInitialSeats - 1);
+
+            $row = $idealInitialSeats[$targetIndex]->getRow();
+            $col = $idealInitialSeats[$targetIndex]->getCol();
+        } else {
+            $targetIndex = rand(0, $countInitialSeats - 1);
+
+            $row = $initialSeats[$targetIndex]->getRow();
+            $col = $initialSeats[$targetIndex]->getCol();
+        }
 
         return array(
             'row' => $row,
@@ -145,13 +161,13 @@ class ModelController extends Controller
         );
     }
     /*obsadi sedadlo a zmeni sousedni sedadla na initial*/
-    public function sitDown($refactoredSeats, $target = NULL, $order = 0) {
+    public function sitDown($refactoredSeats, $target = NULL, $order = 0, $n = 1) {
         
         $targetRow = $target['row'];
         $targetCol = $target['col'];
         $refactoredSeats[$targetRow][$targetCol]->setEmpty(0);
         $refactoredSeats[$targetRow][$targetCol]->setOrder($order);
-        $refactoredSeats[$targetRow][$targetCol]->setClass('obsazeno');//tixme
+        $refactoredSeats[$targetRow][$targetCol]->setClass('obsazeno');//fixme
         
         $targetRowSeats = $refactoredSeats[$targetRow];
         if($refactoredSeats[$targetRow][$targetCol]->getEnding() == 0) {
@@ -168,13 +184,17 @@ class ModelController extends Controller
         $refactoredSeats[$targetRow][$targetCol]->setInitial(0);
 
         if(isset($leftSeatCol)) {
-            $refactoredSeats[$targetRow][$leftSeatCol]->setInitial(1);
-            $refactoredSeats[$targetRow][$leftSeatCol]->setClass('initial');
+            if(!$refactoredSeats[$targetRow][$leftSeatCol]->getInitial()) {
+                $refactoredSeats[$targetRow][$leftSeatCol]->setInitial($order + $n);
+                $refactoredSeats[$targetRow][$leftSeatCol]->setClass('initial');
+            }
         }
 
         if(isset($rightSeatCol)) {
-            $refactoredSeats[$targetRow][$rightSeatCol]->setInitial(1);
-            $refactoredSeats[$targetRow][$rightSeatCol]->setClass('initial');
+            if(!$refactoredSeats[$targetRow][$rightSeatCol]->getInitial()) {
+                $refactoredSeats[$targetRow][$rightSeatCol]->setInitial($order + $n);
+                $refactoredSeats[$targetRow][$rightSeatCol]->setClass('initial');
+            }
         }
 
         return $refactoredSeats;

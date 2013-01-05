@@ -47,11 +47,6 @@ class Model {
     protected $seats;
 
     /**
-     * @Assert\Type(type="integer", message="The value {{ value }} is not a valid {{ type }}.")
-     */
-    protected $sizeOfGroup;
-
-    /**
      * @Assert\File(maxSize="1000000")
      */
     public $file;
