@@ -469,6 +469,8 @@ class ModelController extends Controller
 
     public function refactorSeats($seats)
     {
+        $maxRow = 0;
+        $maxCol = 0;
         foreach ($seats as $seat) {
             $row = $seat->getRow();
             $col = $seat->getCol();
@@ -481,11 +483,18 @@ class ModelController extends Controller
             elseif($seat->getEnding() && $seat->getInitial())
                 $seat->setClass('initialAndEnding');
 
-
-
             $refactoredSeats[$row][$col] = $seat;
+            if($row > $maxRow)
+                $maxRow = $row;
+            if($col > $maxCol)
+                $maxCol = $col;
+        }
+        for ($rowIndex = 1; $rowIndex <= $maxRow; $rowIndex++) { 
+            for ($colIndex = 1; $colIndex <= $maxCol; $colIndex++) { 
+                $refactoredSeatsWellOrdered[$rowIndex][$colIndex] = $refactoredSeats[$rowIndex][$colIndex];
+            }
         }
     
-        return $refactoredSeats;
+        return $refactoredSeatsWellOrdered;
     }
 }
