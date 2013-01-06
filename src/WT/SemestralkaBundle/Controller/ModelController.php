@@ -51,6 +51,7 @@ class ModelController extends Controller
         $form = $this->createFormBuilder()
             ->add('sizeofgroup')
             ->add('n')
+            ->add('showsteps', 'checkbox', array('required' => false))
             ->getForm();        
 
         $em = $this->getDoctrine()->getManager();
@@ -103,7 +104,8 @@ class ModelController extends Controller
                     $refactoredSeats = $refactoredSeatsArray['refactoredseats'];
                     $avgPrice = $refactoredSeatsArray['avgprice'];
 
-                //$refactoredSeatsSteps[] = $refactoredSeats;
+                if(isset($_POST['form']['showsteps']))
+                    $refactoredSeatsSteps[] = $this->convertToArray($refactoredSeats);
             }                        
         }            
         
@@ -120,6 +122,21 @@ class ModelController extends Controller
             'form'                 => $form->createView(),
             'error'                => 0,
         );
+    }
+
+    public function convertToArray($refactoredSeats) {
+        foreach ($refactoredSeats as $row) {            
+            foreach ($row as $seat) {
+                $row = $seat->getRow();
+                $col = $seat->getCol();
+                $refactoredSeatsArray[$row][$col]['col'] = $seat->getCol();
+                $refactoredSeatsArray[$row][$col]['row'] = $seat->getRow();
+                $refactoredSeatsArray[$row][$col]['class'] = $seat->getClass();
+                $refactoredSeatsArray[$row][$col]['price'] = $seat->getPrice();
+                $refactoredSeatsArray[$row][$col]['order'] = $seat->getOrder();
+            }
+        }
+        return $refactoredSeatsArray;
     }
 
     /*vybere sedadlo kam si sednout a vrati jeho pozici*/
