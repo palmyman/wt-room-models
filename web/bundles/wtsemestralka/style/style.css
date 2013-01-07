@@ -206,3 +206,6 @@ td.available { background-color: green; color: white;}
 td.initial { background-color: blue; color: white;}
 td.ending { background-color: red; color: white;}
 td.initialAndEnding { background-color: yellow;}
+
+table.model.step {display: none;}
+table#step1 {display: block;}

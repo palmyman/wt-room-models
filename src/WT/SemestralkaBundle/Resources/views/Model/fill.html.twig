@@ -45,8 +45,6 @@
                 <td class="{{ col.class }}">
                     {% if col.order %}
                         {{ col.order }}
-                    {% else %}
-                        {{ col.price }}
                     {% endif %}
                 </td>
             {% endfor %}
@@ -88,9 +86,9 @@
 </ul>
 #}
 {% if refactoredSeatsSteps %}
-    <h2>Steps</h2>
+    <h2>Steps</h2><div>click on table to show next step</div>
     {% for step in refactoredSeatsSteps %}
-        <table class="model">
+        <table class="model step" id="step{{ loop.index }}">
             <thead>
                 <tr>
                     <th></th>
