@@ -93,9 +93,12 @@ class ModelController extends Controller
                 'model'                => $model,
                 'form'                 => $form->createView(),
                 'error'                => 'Model does not have enough empty seats!',
+                'points'               => 0,
             );
             for ($i=1; $i <= $_POST['form']['sizeofgroup']; $i++) {                       
                 $target = $this->pickSeat($refactoredSeats, $avgPrice, $i);
+                if(!$target['ideal'])
+                    $faults++;
 
                 $refactoredSeats = $this->sitDown($refactoredSeats, $target, $i, $_POST['form']['n']);
                 $modelCapacity = $model->decCapacity();
@@ -114,6 +117,7 @@ class ModelController extends Controller
 
         //print_r($target);
         
+        $points = 8 * (1 - ($faults / $_POST['form']['sizeofgroup']));
 
         return array(
             'refactoredSeats'      => $refactoredSeats,
@@ -121,6 +125,7 @@ class ModelController extends Controller
             'model'                => $model,
             'form'                 => $form->createView(),
             'error'                => 0,
+            'points'               => $points,
         );
     }
 
@@ -165,16 +170,21 @@ class ModelController extends Controller
 
             $row = $idealInitialSeats[$targetIndex]->getRow();
             $col = $idealInitialSeats[$targetIndex]->getCol();
+
+            $ideal = 1;
         } else {
             $targetIndex = rand(0, $countInitialSeats - 1);
 
             $row = $initialSeats[$targetIndex]->getRow();
             $col = $initialSeats[$targetIndex]->getCol();
+
+            $ideal = 0;
         }
 
         return array(
             'row' => $row,
             'col' => $col,
+            'ideal' => $ideal,
         );
     }
     /*obsadi sedadlo a zmeni sousedni sedadla na initial*/

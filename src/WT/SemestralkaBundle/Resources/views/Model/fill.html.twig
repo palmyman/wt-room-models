@@ -24,6 +24,12 @@
             <th>Room</th>
             <td>{{ model.room.name }}</td>
         </tr>
+        {% if points %}
+        <tr>
+            <th>Algoritm score</th>
+            <td>{{ points }}</td>
+        </tr>
+        {% endif %}
     </tbody>
 </table>
 
