@@ -49,7 +49,6 @@ class ModelController extends Controller
         var_dump($_POST);*/
            
         $form = $this->createFormBuilder()
-            ->add('sizeofgroup')
             ->add('n')
             ->add('showsteps', 'checkbox', array('required' => false))
             ->getForm();        
@@ -86,22 +85,12 @@ class ModelController extends Controller
         $refactoredSeatsSteps = NULL;
 
         if(isset($_POST['form'])) {
-            if($_POST['form']['sizeofgroup'] > $modelCapacity)
-                return array(
-                'refactoredSeats'      => $refactoredSeats,
-                'refactoredSeatsSteps' => $refactoredSeatsSteps,
-                'model'                => $model,
-                'form'                 => $form->createView(),
-                'error'                => 'Model does not have enough empty seats!',
-                'points'               => 0,
-            );
-            for ($i=1; $i <= $_POST['form']['sizeofgroup']; $i++) {                       
+            for ($i=1; $i <= $modelCapacity; $i++) {                       
                 $target = $this->pickSeat($refactoredSeats, $avgPrice, $i);
                 if(!$target['ideal'])
                     $faults++;
 
                 $refactoredSeats = $this->sitDown($refactoredSeats, $target, $i, $_POST['form']['n']);
-                $modelCapacity = $model->decCapacity();
 
                 $refactoredSeatsArray = $this->countPrices($refactoredSeats);
                     $refactoredSeats = $refactoredSeatsArray['refactoredseats'];
@@ -124,7 +113,6 @@ class ModelController extends Controller
             'refactoredSeatsSteps' => $refactoredSeatsSteps,
             'model'                => $model,
             'form'                 => $form->createView(),
-            'error'                => 0,
             'points'               => $points,
         );
     }
