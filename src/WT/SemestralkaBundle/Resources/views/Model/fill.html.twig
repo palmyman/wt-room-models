@@ -17,19 +17,19 @@
             <td>{{ model.description }}</td>
         </tr>
         <tr>
-            <th>Available seats</th>
-            <td>{{ model.capacity }}</td>
+            <th>Capacity</th>
+            <td>{{ model.capacity }} / {{ model.room.capacity }}</td>
         </tr>
         <tr>
             <th>Room</th>
             <td>{{ model.room.name }}</td>
         </tr>
-        {% if points %}
         <tr>
-            <th>Algoritm score</th>
-            <td>{{ points }}</td>
+            <th>Score</th>
+            <td>
+                {% if points %}{{ points|number_format(2) }}{% else %}?{% endif %} / 8
+            </td>
         </tr>
-        {% endif %}
     </tbody>
 </table>
 

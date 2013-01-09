@@ -45,9 +45,6 @@ class ModelController extends Controller
      * @Template()
      */
     public function fillAction($id) {
-        /*$session = new Session();        
-        var_dump($_POST);*/
-           
         $form = $this->createFormBuilder()
             ->add('n')
             ->add('showsteps', 'checkbox', array('required' => false))
@@ -62,20 +59,8 @@ class ModelController extends Controller
             
         $model = $em->getRepository('WTSemestralkaBundle:Model')->find($id);
 
-        /*if(isset($_POST['form'])) {
-            $modelCapacity = $session->get('modelcapacity');
-            $model = $model->setCapacity($modelCapacity);
-        }*/
-
         $modelCapacity = $model->getCapacity();
 
-        /*if(isset($_POST['form'])) {
-            $refactoredSeats = $session->get('refactoredseats');
-            echo "beru ze session";
-        } else {
-            $refactoredSeats = $this->refactorSeats($seats);
-            echo "beru z db";
-        }*/
         $refactoredSeats = $this->refactorSeats($seats);
 
         $refactoredSeatsArray = $this->countPrices($refactoredSeats);
@@ -83,12 +68,15 @@ class ModelController extends Controller
             $avgPrice = $refactoredSeatsArray['avgprice'];
 
         $refactoredSeatsSteps = NULL;
+        $points = 0;
+        $faults = 0;
 
         if(isset($_POST['form'])) {
             for ($i=1; $i <= $modelCapacity; $i++) {                       
                 $target = $this->pickSeat($refactoredSeats, $avgPrice, $i);
-                if(!$target['ideal'])
-                    $faults++;
+                if(!$target['ideal']) {
+                    $faults++;                    
+                }
 
                 $refactoredSeats = $this->sitDown($refactoredSeats, $target, $i, $_POST['form']['n']);
 
@@ -96,17 +84,12 @@ class ModelController extends Controller
                     $refactoredSeats = $refactoredSeatsArray['refactoredseats'];
                     $avgPrice = $refactoredSeatsArray['avgprice'];
 
-                if(isset($_POST['form']['showsteps']))
-                    $refactoredSeatsSteps[] = $this->convertToArray($refactoredSeats);
-            }                        
-        }            
-        
-        /*$session->set('refactoredseats', $refactoredSeats);
-        $session->set('modelcapacity', $model->getCapacity()); */       
-
-        //print_r($target);
-        
-        $points = 8 * (1 - ($faults / $_POST['form']['sizeofgroup']));
+                if(isset($_POST['form']['showsteps'])) {
+                    $refactoredSeatsSteps[$i] = $this->convertToArray($refactoredSeats);
+                }
+            }
+            $points = 8 * (1 - ($faults / $modelCapacity));                        
+        }
 
         return array(
             'refactoredSeats'      => $refactoredSeats,
@@ -136,16 +119,16 @@ class ModelController extends Controller
     public function pickSeat($refactoredSeats, $avgPrice, $order = 0) {
         $countInitialSeats = 0;
         $countIdealInitialSeats = 0;
-        foreach ($refactoredSeats as $rowIn) {
-            foreach ($rowIn as $seatIn) {
-                if($seatIn->getInitial()) {
-                    if($seatIn->getPrice() >= $avgPrice) {
-                        $initialSeats[] = $seatIn;
+        foreach ($refactoredSeats as $row) {
+            foreach ($row as $seat) {
+                if($seat->getInitial()) {
+                    if($seat->getPrice() >= $avgPrice) {
+                        $initialSeats[] = $seat;
                         $countInitialSeats++;
                     }
 
-                    if($seatIn->getInitial() <= $order || $seatIn->getInitial() === '1') {
-                        $idealInitialSeats[] = $seatIn;
+                    if($seat->getInitial() <= $order || $seat->getInitial() === '1') {
+                        $idealInitialSeats[] = $seat;
                         $countIdealInitialSeats++;
                     }
                 }                
@@ -182,7 +165,10 @@ class ModelController extends Controller
         $targetCol = $target['col'];
         $refactoredSeats[$targetRow][$targetCol]->setEmpty(0);
         $refactoredSeats[$targetRow][$targetCol]->setOrder($order);
-        $refactoredSeats[$targetRow][$targetCol]->setClass('obsazeno');//fixme
+        if($target['ideal'])
+            $refactoredSeats[$targetRow][$targetCol]->setClass('ideal');//fixme
+        else
+            $refactoredSeats[$targetRow][$targetCol]->setClass('warning');//fixme
         
         $targetRowSeats = $refactoredSeats[$targetRow];
         if($refactoredSeats[$targetRow][$targetCol]->getEnding() == 0) {

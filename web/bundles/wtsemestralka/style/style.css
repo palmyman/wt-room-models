@@ -204,8 +204,10 @@ table.model th { width: 30px; height: 20px; text-align: center;}
 
 td.available { background-color: green; color: white;}
 td.initial { background-color: blue; color: white;}
-td.ending { background-color: red; color: white;}
-td.initialAndEnding { background-color: yellow;}
+td.ending { background-color: gray; color: white;}
+td.initialAndEnding { background-color: gray; color: white;}
+td.ideal { }
+td.warning { background-color: orange;}
 
 table.model.step {display: none;}
 table#step1 {display: block;}
