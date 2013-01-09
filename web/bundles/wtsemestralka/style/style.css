@@ -211,3 +211,7 @@ td.warning { background-color: orange;}
 
 table.model.step {display: none;}
 table#step1 {display: block;}
+
+form label {width: 100px; float: left; text-align: right; margin-right: 10px;} 
+form div div { padding: 5px 5px;}
+form p button { margin-left: 115px;}
