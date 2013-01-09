@@ -153,22 +153,15 @@ ul#menu li.selected a, ul#menu li.selected a:hover
 ul#menu li a:hover
 { color: #40D8FE;}
 
-#content_header, #content_footer
-{ width: 928px;
-  background: url(content_header.png) no-repeat;
-  height: 15px;
-  margin-top: -90px;}
-  
-#content_footer
-{ background: url(content_footer.png) no-repeat;
-  margin-top: 0;} 
-
 #site_content
 { width: 878px;
   overflow: hidden;
   margin: 0 auto 0 auto;
   padding: 0px 10px 20px 40px;
-  background: #FCFDF4;} 
+  background: #FCFDF4;
+  margin-top: -90px;
+  border-radius: 15px;
+} 
 
 #content
 { text-align: left;
