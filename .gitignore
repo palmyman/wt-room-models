@@ -1,6 +1,9 @@
-app/bootstrap.php.cache
 /app/bootstrap*
 /app/cache/*
 /app/logs/*
 /vendor/
 /app/config/parameters.yml
+/web/upload/*
+/web/bundles/framework/
+/web/bundles/sensiodistribution/
+/web/bundles/webprofiler/
