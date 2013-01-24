@@ -80,7 +80,7 @@ class ModelController extends Controller
 
                 $refactoredSeats = $this->sitDown($refactoredSeats, $target, $i, $_POST['form']['n']);
 
-                $refactoredSeatsArray = $this->countPrices($refactoredSeats);
+                $refactoredSeatsArray = $this->updatePrices($refactoredSeats, $target);
                     $refactoredSeats = $refactoredSeatsArray['refactoredseats'];
                     $avgPrice = $refactoredSeatsArray['avgprice'];
 
@@ -220,6 +220,37 @@ class ModelController extends Controller
                     }
                     $sumPrice += $price;
                     $seat->setPrice($price);
+                }
+            }
+        }
+        if($countInitialSeats)
+            $avgPrice = ceil($sumPrice / $countInitialSeats);
+        else
+            $avgPrice = $sumPrice;
+
+        return array(
+            'refactoredseats' => $refactoredSeats,
+            'avgprice' => $avgPrice,
+        );
+    }
+
+    /*
+    efektivneni bude pocitat ceny sedadel - nebude je pocitat od zacatku, ale bude je postupne zvysovat
+    */
+    public function updatePrices($refactoredSeats, $target) {
+        $sumPrice = 0;
+        $countInitialSeats = 0;
+        foreach ($refactoredSeats as $row) {            
+            foreach ($row as $seat) {
+                if($seat->getAvailable() || $seat->getInitial()) {
+                    $price = $seat->getPrice();
+
+                    $price += abs($seat->getRow() - $target['row']) + abs($seat->getCol() - $target['col']);
+                    $seat->setPrice($price);
+                }
+                if($seat->getInitial()) {
+                    $countInitialSeats++;
+                    $sumPrice += $price;
                 }
             }
         }
