@@ -20,12 +20,12 @@
             <td>{{ entity.capacity }}</td>
             <td>{{ entity.room.name }}</td>
             <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('model_show', { 'id': entity.id }) }}">show</a>
-                    </li>
+                <ul>                    
                     <li>
                         <a href="{{ path('model_fill', { 'id': entity.id }) }}">fill</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('model_edit', { 'id': entity.id }) }}">edit</a>
                     </li>
                 </ul>
             </td>
@@ -37,7 +37,12 @@
 <ul>
     <li>
         <a href="{{ path('model_new') }}">
-            Create a new entry
+            Create a new entry from CSV
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('modelApi') }}">
+            Create a new entry in UI
         </a>
     </li>
 </ul>

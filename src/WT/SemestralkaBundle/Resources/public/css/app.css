@@ -1,0 +1,25 @@
+#reportContainer {
+	position: fixed;
+	top: 2em;
+	right: 2em;
+	width: 20em;
+}
+
+#reportContainer > div { 
+	display: hidden;
+	width: 19em; 
+	padding: 0em;
+	margin: 0 0 0.5em 0;
+	border: 1px solid #EEEEEC;
+}
+
+#reportContainer > div > h3 {
+	margin: 0; 
+	padding: 0.2em 0.4em;
+	background: #EEEEEC;  
+}
+
+#reportContainer > div > p {
+	margin: 0.3em 0;
+	padding: 0.1em 0.4em;
+}

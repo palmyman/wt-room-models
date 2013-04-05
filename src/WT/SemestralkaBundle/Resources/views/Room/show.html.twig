@@ -47,12 +47,12 @@
             <td>{{ model.capacity }}</td>
             <td>{{ model.room.name }}</td>
             <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('model_show', { 'id': model.id }) }}">show</a>
-                    </li>
+                <ul>                    
                     <li>
                         <a href="{{ path('model_fill', { 'id': model.id }) }}">fill</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('model_edit', { 'id': model.id }) }}">edit</a>
                     </li>                    
                 </ul>
             </td>

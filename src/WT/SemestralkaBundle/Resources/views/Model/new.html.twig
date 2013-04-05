@@ -1,6 +1,6 @@
 {% extends 'WTSemestralkaBundle::layout.html.twig' %}
 {% block content %}
-<h1>Model creation</h1>
+<h1>Model creation from CSV</h1>
 
 <form action="{{ path('model_create') }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}

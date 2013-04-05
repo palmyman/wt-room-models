@@ -1,0 +1,58 @@
+{% extends 'WTSemestralkaBundle::layout.html.twig' %}
+{% block content %}
+<h1>Model creation from UI</h1>
+
+{% stylesheets
+	 '@WTSemestralkaBundle/Resources/public/css/app.css'
+	%}
+	<link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
+
+{% javascripts
+			'@WTSemestralkaBundle/Resources/public/js/Application.js'
+			'@WTSemestralkaBundle/Resources/public/js/ModelHandler.js'
+			'@WTSemestralkaBundle/Resources/public/js/Model.js'
+			'@WTSemestralkaBundle/Resources/public/js/Reporter.js'
+			'@WTSemestralkaBundle/Resources/public/js/TableHelper.js'
+	%}
+	<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+{# vytvoreni potrebneho prostredi pro javascriptovou aplikaci - URL jednotlivych metod API #}
+<script type="text/javascript">
+	var modelApiNew = "{{ path('modelApiNew', { id:id }) }}";
+	var modelApiLoad = "{{ path('modelApiLoad') }}";
+	var modelApiDelete = "{{ path('modelApiDelete') }}";
+	var modelApiSave = "{{ path('modelApiSave') }}";
+</script>
+<!--[if lt IE 9]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+{% image 
+	'@WTSemestralkaBundle/Resources/public/images/ajax-loader.gif'
+%}
+{# obrazek pro indikaci probihajici operace #}
+<style type="text/css">
+	#preload-ajax-loader { background: url('{{ asset_url }}') no-repeat 50% 50%; }
+	.ajax-loader { background: url('{{ asset_url }}') no-repeat 50% 50%; }
+</style>
+{% endimage %}
+
+
+
+<ul>
+	Model:
+	<li><input type="button" id="modelButtonNew"  value="New"/></li>
+	<li><input type="button" id="modelButtonDelete" value="Storno"/></li>	
+</ul>
+<div id="reportContainer"></div>
+<div id="modelContainer"></div>
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('room') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock content %}
